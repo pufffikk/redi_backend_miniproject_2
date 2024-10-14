@@ -8,4 +8,23 @@ serving some static and dynamic websites (HTML) from the backend.
 ## External APIs
 
 - basic info about countries: https://studies.cs.helsinki.fi/restcountries/
-- weather API: https://openweathermap.org/ or https://open-meteo.com/en/docs
+- weather API: https://open-meteo.com/en/docs
+
+### Install packages
+
+```console
+$ pip install -r requirements.txt
+```
+
+### Run fast api
+
+```console
+$ fastapi run main.py
+```
+
+### Run tests
+
+```console
+$ pytest
+```
+
