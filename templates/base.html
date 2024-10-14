@@ -15,11 +15,42 @@
             color: #3498db;
             font-weight: bold;
         }
+        .tasks {
+            margin-top: 40px;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        ul {
+            list-style-type: disc; /* Use disc bullet points */
+            padding: 0; /* Removes default padding */
+        }
+        li {
+            margin-bottom: 15px; /* Adds spacing between tasks */
+        }
     </style>
 </head>
 <body>
     <h1>Welcome to Country Weather Info</h1>
     <p>This application provides information about countries and their current weather. Explore the list of countries by clicking the link below.</p>
     <a href="/api/countries">Go to Countries List</a>
+
+    <div class="tasks">
+        <h2>Improvement Tasks</h2>
+        <ul>
+            <li>Ensure the countries are displayed in sorted order (by name).</li>
+            <li>Add population as a column in the table and implement sorting by population.</li>
+            <li>Add more unit tests (mock the calls to the external APIs) and include integration tests for actual API calls, ideally separating them from unit tests.</li>
+            <li>Implement caching to store results in memory, to avoid retrieving all countries from the external API every time.</li>
+            <li>Add functionality for filtering countries by region and minimum temperature in the capital.</li>
+            <li>Incorporate historical or forecast weather data for a more comprehensive view.</li>
+            <li>Integrate information about flights and attractions in the country or capital using third-party APIs (most require registration for an API key).</li>
+            <li>Enhance the application with additional information about capitals sourced from Wikipedia (example: <a href="https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts|info&titles=Helsinki&exintro=true&explaintext=true&inprop=url" target="_blank">Helsinki Wikipedia API</a>).</li>
+        </ul>
+    </div>
 </body>
 </html>

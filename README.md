@@ -31,6 +31,12 @@ $ pytest
 
 ## Further Ideas
 
+- make sure the countries are displayed in sorted order (by name)
+  - add population as a column in the table and add the option to sort by population
+
+- add more unit tests (mock the calls to the external APIs), add some integration tests to the project (which call
+the actual external APIs, these should probably be separated from your unit tests)
+
 - Add some caching (save results in memory), retrieving all countries every time from external
   API is not optimal
 
