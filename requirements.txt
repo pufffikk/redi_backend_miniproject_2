@@ -1,0 +1,5 @@
+fastapi[standard]
+requests
+pydantic
+pytest
+jinja2

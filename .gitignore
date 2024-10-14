@@ -1,0 +1,43 @@
+# Python specific
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+
+# Virtual environment
+.venv/
+venv/
+env/
+env.bak/
+venv.bak/
+
+# IDE specific files
+.idea/
+*.sublime-workspace
+*.sublime-project
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# FastAPI specific
+templates/__pycache__/
+static/__pycache__/
+*.html
+*.css
+*.js
+
+# Local environment variables
+.env
+*.env
+
+# MacOS specific
+.DS_Store
+
+# Miscellaneous
+*.egg-info/
+dist/
+build/
