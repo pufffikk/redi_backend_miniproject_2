@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capital Weather</title>
+    <!-- Bootstrap CSS via CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Weather in {{ capital }}, {{ country_name }}</h1>
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Current Weather</h5>
+                <p class="card-text"><strong>Temperature:</strong> {{ weather.temperature }}°C</p>
+                <p class="card-text"><strong>Wind Speed:</strong> {{ weather.wind_speed }} km/h</p>
+                <a href="/api/countries" class="btn btn-primary">Back to Countries</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -23,21 +23,9 @@ venv.bak/
 # Jupyter Notebook
 .ipynb_checkpoints/
 
-# FastAPI specific
-templates/__pycache__/
-static/__pycache__/
-*.html
-*.css
-*.js
-
 # Local environment variables
 .env
 *.env
 
 # MacOS specific
 .DS_Store
-
-# Miscellaneous
-*.egg-info/
-dist/
-build/
