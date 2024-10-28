@@ -1,68 +1,80 @@
-from fastapi import FastAPI, HTTPException, Request
-from pydantic import BaseModel
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 import requests
+from fastapi import FastAPI, HTTPException
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+from fastapi.requests import Request
+from pydantic import BaseModel
+from functools import lru_cache
 
-app = FastAPI()
 
-# External API URLs
-RESTCOUNTRIES_URL = "https://studies.cs.helsinki.fi/restcountries/api/"
-OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
-
-# Jinja2 templates location
 templates = Jinja2Templates(directory="templates")
 
-# Models
-class Country(BaseModel):
+COUNTRIES_API = "https://studies.cs.helsinki.fi/restcountries/api/"
+OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
+SUCCESS_STATUS = 200
+app = FastAPI()
+
+
+class CountryData(BaseModel):
     name: str
     capital: str
     region: str
+    population: int
+    lat: float
+    lng: float
 
-class WeatherInfo(BaseModel):
+
+class WeatherData(BaseModel):
     temperature: float
     wind_speed: float
 
-# Routes
 
-# Root URL
+@lru_cache(maxsize=100)
+def get_countries_from_external_api():
+    return requests.get(COUNTRIES_API + "all")
+
+
 @app.get("/", response_class=HTMLResponse)
-def read_root(request: Request):
+async def index(request: Request):
     return templates.TemplateResponse("base.html", {"request": request})
 
-# GET /api/countries
-@app.get("/api/countries", response_model=list[Country])
-def get_countries(request: Request):
-    response = requests.get(RESTCOUNTRIES_URL + "all")
-    if response.status_code != 200:
-        raise HTTPException(status_code=500, detail="Error fetching country data")
-    countries_data = response.json()
-    countries = [
-        Country(name=c["name"]["common"], capital=c.get("capital", ["N/A"])[0], region=c["region"]) for c in countries_data
-    ]
-    # Render the HTML template with countries data
-    return templates.TemplateResponse(request, "countries.html", {"countries": countries})
 
-# GET /api/countries/{name}/capital/weather
-@app.get("/api/countries/{name}/capital/weather", response_model=WeatherInfo)
-def get_country_weather(request: Request, name: str):
-    response = requests.get(RESTCOUNTRIES_URL + "name/" + name)
-    if response.status_code != 200:
-        raise HTTPException(status_code=500, detail="Error fetching country data")
-    country_data = response.json()
-    lat, lon = country_data["capitalInfo"]["latlng"]
-    capital = country_data["capital"][0]
-    response = requests.get(
-        f"{OPEN_METEO_URL}?latitude={lat}&longitude={lon}&current_weather=true"
-    )
-    if response.status_code != 200:
-        raise HTTPException(status_code=500, detail="Error fetching weather data")
-    weather_data = response.json()["current_weather"]
+@app.get("/api/countries", response_model=list[CountryData])
+async def list_countries(request: Request, sort_by: str = "name", order: str = "asc"):
+    response = get_countries_from_external_api()
+    if response.status_code != SUCCESS_STATUS:
+        raise HTTPException(status_code=500, detail="Error retrieving country list")
+    countries = [
+        CountryData(name=c["name"]["common"],
+                    capital=c.get("capital", ["N/A"])[0],
+                    region=c["region"],
+                    population=c["population"],
+                    lat=c["latlng"][0],
+                    lng=c["latlng"][1]) for c in
+        response.json()
+    ]
+
+    reverse = True if order == "desc" else False
+    countries = sorted(countries, key=lambda x: getattr(x, sort_by), reverse=reverse)
+
+    return templates.TemplateResponse(request, "countries.html",
+                                      {"countries": countries,
+                                       "sort_by": sort_by,
+                                       "order": order})
+
+
+@app.get("/api/countries/{capital}/weather")
+async def weather_in_capital(request: Request, capital: str, country:str, lat: float, lng: float):
+    response = requests.get(f"{OPEN_METEO_URL}?latitude={lat}&longitude={lng}&current_weather=true")
+    if response.status_code != SUCCESS_STATUS:
+        raise HTTPException(status_code=500,detail="Error retrieving data")
+    weather_data = response.json()
     return templates.TemplateResponse(request, "weather.html", {
+        "country": country,
         "capital": capital,
-        "country_name": name,
-        "weather": {
-            "temperature": weather_data["temperature"],
-            "wind_speed": weather_data["windspeed"]
-        }
+        "weather":
+            {
+                "temperature": weather_data["current_weather"]["temperature"],
+                "wind_speed": weather_data["current_weather"]["windspeed"]
+            }
     })

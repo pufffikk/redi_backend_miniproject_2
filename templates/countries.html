@@ -13,9 +13,26 @@
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
                 <tr>
-                  <th>Name</th>
-                  <th>Capital</th>                  
-                  <th>Region</th>
+                  <th>
+                      <a href="?sort_by=name&order={{ 'asc' if sort_by != 'name' or order == 'desc' else 'desc' }}">
+                        Name
+                      </a>
+                  </th>
+                  <th>
+                      <a href="?sort_by=capital&order={{ 'asc' if sort_by != 'capital' or order == 'desc' else 'desc' }}">
+                        Capital
+                      </a>
+                  </th>
+                  <th>
+                      <a href="?sort_by=region&order={{ 'asc' if sort_by != 'region' or order == 'desc' else 'desc' }}">
+                        Region
+                      </a>
+                  </th>
+                  <th>
+                      <a href="?sort_by=population&order={{ 'asc' if sort_by != 'population' or order == 'desc' else 'desc' }}">
+                        Population
+                      </a>
+                  </th>
                 </tr>
             </thead>
             <tbody>
@@ -25,10 +42,11 @@
                   <td>
                     {{ country.capital }}
                     {% if country.capital != "N/A" %}
-                    <a href="/api/countries/{{ country.name }}/capital/weather" class="btn btn-sm btn-primary ml-2">Weather</a>
+                    <a href="/api/countries/{{ country.capital }}/weather?country={{ country.name }}&lat={{ country.lat }}&lng={{ country.lng }}" class="btn btn-sm btn-primary ml-2">Weather</a>
                     {% endif %}
                   </td>
                   <td>{{ country.region }}</td>
+                  <td>{{ country.population }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
